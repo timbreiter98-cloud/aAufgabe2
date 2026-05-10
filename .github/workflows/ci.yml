@@ -1,0 +1,33 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - master
+            - main
+
+jobs:
+    build-test-format:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Repository auschecken
+              uses: actions/checkout@v5
+
+            - name: Java einrichten
+              uses: actions/setup-java@v5
+              with:
+                  distribution: temurin
+                  java-version: 25
+
+            - name: Gradle einrichten
+              uses: gradle/actions/setup-gradle@v5
+
+            - name: Projekt bauen
+              run: ./gradlew classes
+
+            - name: JUnit-Tests ausführen
+              run: ./gradlew test
+
+            - name: Formatierung prüfen
+              run: ./gradlew spotlessCheck
